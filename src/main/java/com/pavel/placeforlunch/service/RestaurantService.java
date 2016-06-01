@@ -1,7 +1,7 @@
 package com.pavel.placeforlunch.service;
 
 import com.pavel.placeforlunch.model.Restaurant;
-import com.pavel.placeforlunch.util.exception.NotFoundException;
+import com.pavel.placeforlunch.util.exception.ResourceNotFoundException;
 
 import java.util.List;
 
@@ -13,17 +13,19 @@ public interface RestaurantService {
     List<Restaurant> getAll();
 
     /**
-     * Get all restaurants and fetch dishes (both offered and
-     * not offered) using a single query.
+     * Get all restaurants and fetch dishes using a single query.
+     *
      * @return List of restaurants with all dishes
      */
-    List<Restaurant> getAllWithDishes();
+    List<Restaurant> getAllFetchDishes();
 
-    Restaurant get(int id) throws NotFoundException;
+    Restaurant get(int id) throws ResourceNotFoundException;
 
-    void delete(int id) throws NotFoundException;
+    Restaurant getFetchDishes(int id) throws ResourceNotFoundException;
 
-    Restaurant update(Restaurant restaurant) throws NotFoundException;
+    void delete(int id) throws ResourceNotFoundException;
+
+    Restaurant update(Restaurant restaurant) throws ResourceNotFoundException;
 
     Restaurant save(Restaurant restaurant);
 }

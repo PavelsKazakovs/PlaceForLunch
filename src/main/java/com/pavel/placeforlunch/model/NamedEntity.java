@@ -1,15 +1,26 @@
 package com.pavel.placeforlunch.model;
 
-public abstract class NamedEntity {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.NotEmpty;
 
-    private int id;
-    private String name;
+import javax.persistence.*;
 
-    public int getId() {
+@MappedSuperclass
+@Access(AccessType.FIELD)
+abstract class NamedEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Integer id;
+
+    @NotEmpty
+    protected String name;
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -19,5 +30,10 @@ public abstract class NamedEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @JsonIgnore
+    public boolean isNew() {
+        return id == null;
     }
 }

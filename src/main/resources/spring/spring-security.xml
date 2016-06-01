@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.springframework.org/schema/security"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <http pattern="/rest/**" use-expressions="true" name="restSecurityFilterChain" create-session="stateless">
+
+        <http-basic/>
+
+        <!-- Poll data: only admin can edit -->
+        <intercept-url pattern="/rest/*/poll/**" access="hasRole('ROLE_ADMIN')" method="POST"/>
+        <intercept-url pattern="/rest/*/poll/**" access="hasRole('ROLE_ADMIN')" method="PUT"/>
+        <intercept-url pattern="/rest/*/poll/**" access="hasRole('ROLE_ADMIN')" method="DELETE"/>
+        <intercept-url pattern="/rest/*/poll/**" access="isAuthenticated()" method="GET"/>
+
+        <!-- Profile -->
+        <intercept-url pattern="/rest/*/profile/**" access="isAuthenticated()"/>
+
+        <!-- User data: only admin can read and write -->
+        <intercept-url pattern="/rest/*/admin/**" access="hasRole('ROLE_ADMIN')"/>
+
+        <!-- No authorization needed to register -->
+        <intercept-url pattern="/rest/*/new-user" access="permitAll" method="POST"/>
+
+        <csrf disabled="true"/>
+
+    </http>
+
+    <beans:bean id="webSecurity" class="com.pavel.placeforlunch.web.security.WebSecurity"/>
+    <beans:bean id="passwordEncoder" class="com.pavel.placeforlunch.util.PasswordUtil"
+                factory-method="getPasswordEncoder"/>
+
+    <authentication-manager>
+        <authentication-provider user-service-ref="userService">
+            <password-encoder ref="passwordEncoder"/>
+        </authentication-provider>
+    </authentication-manager>
+
+</beans:beans>

@@ -1,7 +1,7 @@
 package com.pavel.placeforlunch.service;
 
 import com.pavel.placeforlunch.model.Dish;
-import com.pavel.placeforlunch.util.exception.NotFoundException;
+import com.pavel.placeforlunch.util.exception.ResourceNotFoundException;
 
 import java.util.List;
 
@@ -10,13 +10,25 @@ import java.util.List;
  */
 public interface DishService {
 
-    List<Dish> getByRestaurantId(int restaurantId) throws NotFoundException;
+    List<Dish> getByRestaurantId(int restaurantId) throws ResourceNotFoundException;
 
-    Dish get(int id) throws NotFoundException;
+    Dish get(int id, int restaurantId) throws ResourceNotFoundException;
 
-    void delete(int id) throws NotFoundException;
+    Dish getWithRestaurant(int id) throws ResourceNotFoundException;
 
-    Dish update(Dish dish) throws NotFoundException;
+    void delete(int id) throws ResourceNotFoundException;
 
-    Dish save(Dish dish);
+    /**
+     * Delete dish with check if dish belongs to restaurant. If dish does not belong
+     * to specified restaurant, {@link ResourceNotFoundException} will be thrown.
+     *
+     * @param id           dish id
+     * @param restaurantId restaurant id
+     * @throws ResourceNotFoundException
+     */
+    void delete(int id, int restaurantId) throws ResourceNotFoundException;
+
+    Dish update(Dish dish, int restaurantId) throws ResourceNotFoundException;
+
+    Dish save(Dish dish, int restaurantId);
 }

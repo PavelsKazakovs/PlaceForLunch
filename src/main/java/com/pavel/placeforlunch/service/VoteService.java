@@ -1,9 +1,9 @@
 package com.pavel.placeforlunch.service;
 
 import com.pavel.placeforlunch.model.Restaurant;
-import com.pavel.placeforlunch.util.exception.NotFoundException;
+import com.pavel.placeforlunch.model.Vote;
+import com.pavel.placeforlunch.util.exception.ResourceNotFoundException;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,16 +11,22 @@ import java.util.Map;
  */
 public interface VoteService {
 
-    List<Restaurant> getOptions();
+    Vote getByUserId(int userId) throws ResourceNotFoundException;
 
-    Restaurant get(int userId) throws NotFoundException;
+    void cancel(int userId) throws ResourceNotFoundException;
 
-    void cancel(int userId) throws NotFoundException;
+    Vote vote(int restaurantId, int userId) throws ResourceNotFoundException;
 
-    Restaurant vote(int restaurantId, int userId) throws NotFoundException;
+    void resetAll();
 
-    // TODO: schedule once a day
-    void deleteAll();
-
+    /**
+     * Collects the voting results and returns these in sorted
+     * {@link java.util.LinkedHashMap LinkedHashMap}
+     * Primary sort - vote count (desc), secondary sort - restaurant ID (asc).
+     * Count of users that did not vote (key: null) is always last.
+     *
+     * @return Sorted {@link java.util.LinkedHashMap LinkedHashMap} with
+     * {@link Restaurant}s as keys and vote counts as values.
+     */
     Map<Restaurant, Integer> getVoteCountsByRestaurant();
 }
